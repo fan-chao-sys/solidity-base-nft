@@ -92,8 +92,8 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuction.sol": {
-      "lastModificationDate": 1765002401511,
-      "contentHash": "d2698b918f5704f32e0685ff14b39843",
+      "lastModificationDate": 1765159452812,
+      "contentHash": "032720cba59eca8bb601b3d00ac824c4",
       "sourceName": "contracts/NFTAuction.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -131,6 +131,7 @@
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+        "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
         "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
@@ -1423,7 +1424,7 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuctionV2.sol": {
-      "lastModificationDate": 1765003053416,
+      "lastModificationDate": 1765086772329,
       "contentHash": "08929cc1d545584d0c233bfa057c5f20",
       "sourceName": "contracts/NFTAuctionV2.sol",
       "solcConfig": {
@@ -1469,7 +1470,7 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuctionFactory.sol": {
-      "lastModificationDate": 1765005353431,
+      "lastModificationDate": 1765097902994,
       "contentHash": "bd77b793c44d6a670c50bc9287050bc9",
       "sourceName": "contracts/NFTAuctionFactory.sol",
       "solcConfig": {

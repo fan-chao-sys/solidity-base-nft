@@ -1,29 +1,29 @@
 {
   "network": "hardhat",
   "nft": {
-    "address": "0xFF168dFF08EB01A3D7296460A842Bbc20bb85F6A",
+    "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     "tokenId": 5,
-    "aliceAddress": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
+    "aliceAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
   },
   "usdc": {
-    "address": "0x53F6E29f07aa9Bc7146E05EbCAEC508F87FeF55b",
-    "bobAddress": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
+    "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "bobAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
   },
   "auction": {
-    "implementation": "0xD6A868545B08c9EA0F103F742CCb855A26FeCb04",
-    "proxyAddress": "0xc57a23E49e2A9B94072951310769CA164C90B052"
+    "implementation": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    "proxyAddress": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
   },
   "auctionFactory": {
-    "address": "0xC1ebD63e87dE79f9BA9DB20F5205772bBea49A8C"
+    "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e"
   },
   "priceFeed": {
-    "eth": "0xf336D4287A08626998c6144C4df13A8B688C8589",
-    "usdc": "0x5765bD358FD0066dE6bF9E0837f7DB54553542b4"
+    "eth": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+    "usdc": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
   },
   "accounts": {
-    "deployer": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
-    "alice": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
-    "bob": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
-    "carol": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
+    "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "alice": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "bob": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "carol": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
   }
 }
