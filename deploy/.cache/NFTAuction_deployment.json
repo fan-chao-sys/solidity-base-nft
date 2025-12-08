@@ -1,31 +1,29 @@
 {
   "network": "hardhat",
   "nft": {
-    "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+    "address": "0xFF168dFF08EB01A3D7296460A842Bbc20bb85F6A",
     "tokenId": 5,
-    "aliceAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+    "aliceAddress": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
   },
   "usdc": {
-    "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-    "bobAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+    "address": "0x53F6E29f07aa9Bc7146E05EbCAEC508F87FeF55b",
+    "bobAddress": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
   },
   "auction": {
-    "implementation": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-    "proxyAddress": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
-    "upgraded": true,
-    "upgradeTime": "2025-12-07T03:09:44.818Z"
+    "implementation": "0xD6A868545B08c9EA0F103F742CCb855A26FeCb04",
+    "proxyAddress": "0xc57a23E49e2A9B94072951310769CA164C90B052"
   },
   "auctionFactory": {
-    "address": "0x59b670e9fA9D0A427751Af201D676719a970857b"
+    "address": "0xC1ebD63e87dE79f9BA9DB20F5205772bBea49A8C"
   },
   "priceFeed": {
-    "eth": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-    "usdc": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE"
+    "eth": "0xf336D4287A08626998c6144C4df13A8B688C8589",
+    "usdc": "0x5765bD358FD0066dE6bF9E0837f7DB54553542b4"
   },
   "accounts": {
-    "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "alice": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    "bob": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-    "carol": "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+    "deployer": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
+    "alice": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
+    "bob": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841",
+    "carol": "0x660EAFb0acA8EeB99De68BA79EEaE6aBF76e2841"
   }
 }

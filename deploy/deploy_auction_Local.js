@@ -15,7 +15,16 @@ module.exports = async function (hre) {
     // 从 deployments 中解构 deploy 函数，用于部署合约
     const { deploy } = deployments;
     // 获取命名账户（在 hardhat.config.js 中配置的账户）
-    const { deployer, alice, bob,carol } = await getNamedAccounts();
+    let { deployer, alice, bob, carol } = await getNamedAccounts();
+    
+    // 如果账户为null，使用deployer作为fallback（测试网络可能只有一个账户）
+    if (!deployer) {
+        const signers = await ethers.getSigners();
+        deployer = signers[0].address;
+    }
+    if (!alice) alice = deployer;
+    if (!bob) bob = deployer;
+    if (!carol) carol = deployer;
     
     // 打印部署开始信息和账户地址
     console.log("=== 开始部署合约 ===");

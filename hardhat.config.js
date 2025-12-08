@@ -3,6 +3,9 @@ require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-deploy"); // 这里应该是 "hardhat-deploy"
 require("@openzeppelin/hardhat-upgrades"); // 顺序不能错
 
+// 引入 dotenv 模块，用于读取环境变量
+require("dotenv").config();
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
@@ -27,6 +30,17 @@ module.exports = {
     },
     carol: {
       default: 3, // 第四个账户作为 Carol
+    }
+  },
+  networks: {
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [
+        process.env.PRIVATE_KEY1 || process.env.PRIVATE_KEY,  // deployer
+        process.env.PRIVATE_KEY2 || process.env.PRIVATE_KEY,  // alice (如果没有配置，使用同一个)
+        process.env.PRIVATE_KEY3 || process.env.PRIVATE_KEY,  // bob
+        process.env.PRIVATE_KEY4 || process.env.PRIVATE_KEY   // carol
+      ].filter(key => key) // 过滤掉undefined的值
     }
   }
 };
