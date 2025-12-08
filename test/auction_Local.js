@@ -350,42 +350,43 @@ async function main(){
 
     // 验证合约升级
     console.log("\n--- Step 7: 验证合约升级 ---");
-    // 注意：使用工厂创建的拍卖代理地址来验证升级
-    // 因为工厂在创建拍卖时会使用更新后的实现合约地址
-    console.log("验证升级的拍卖代理合约地址：", auctionAddr);
-    
-    // 首先验证工厂中的实现合约地址是否已更新
+    console.log("验证拍卖代理地址：", auctionAddr);
+
+    // 验证工厂记录的实现地址
     const factoryImplAddress = await nftAuctionFactory.getNFTAuctionImplementation();
     console.log("工厂中的实现合约地址：", factoryImplAddress);
-    
-    // 检查部署信息中的实现合约地址
+
     if (deployInfo && deployInfo.auction && deployInfo.auction.implementation) {
         console.log("部署信息中的实现合约地址：", deployInfo.auction.implementation);
         if (factoryImplAddress.toLowerCase() === deployInfo.auction.implementation.toLowerCase()) {
-            console.log("✓ 工厂实现合约地址已更新为 V2");
+            console.log("✓ 工厂实现合约地址与部署信息一致");
         } else {
-            console.log("⚠️  警告：工厂实现合约地址与部署信息不一致");
-            console.log("   这可能表示合约已升级但部署信息未更新");
+            console.log("⚠️ 工厂实现合约地址与部署信息不一致");
         }
     }
-    
-    // 通过拍卖代理合约地址验证升级
-    // 如果工厂的实现合约地址已更新为 V2，那么新创建的拍卖代理应该指向 V2 实现
-    try {
-        const nftAuctionV2 = await ethers.getContractAt("NFTAuctionV2", auctionAddr);
-        const version = await nftAuctionV2.getVersion();
-        console.log("✓ 升级后合约版本：", version);
-        
-        if (version === "SimpleAuction V2.0") {
-            console.log("✓ 合约升级验证成功！");
-            console.log("   拍卖代理合约已成功使用 V2 实现合约");
-        } else {
-            console.error("✗ 合约版本不匹配，升级可能未成功");
-            console.error("   期望版本：SimpleAuction V2.0");
-            console.error("   实际版本：", version);
+
+    // 读取当前拍卖代理的实现地址
+    const auctionImplAddress = await upgrades.erc1967.getImplementationAddress(auctionAddr);
+    console.log("拍卖代理指向的实现地址：", auctionImplAddress);
+
+    // 升级后验证版本；未开启升级则仅输出提示
+    if (shouldUpgrade) {
+        try {
+            const nftAuctionV2 = await ethers.getContractAt("NFTAuctionV2", auctionAddr);
+            const version = await nftAuctionV2.getVersion();
+            console.log("✓ 升级后合约版本：", version);
+            
+            if (version === "SimpleAuction V2.0") {
+                console.log("   拍卖代理已成功升级到 V2");
+            } else {
+                console.error("✗ 合约版本不匹配，升级可能未成功");
+                console.error("   期望：SimpleAuction V2.0；实际：", version);
+            }
+        } catch (error) {
+            console.error("✗ 验证升级时出错:", error.message);
         }
-    } catch (error) {
-        console.error("✗ 验证升级时出错:", error.message);
+    } else {
+        console.log("未开启升级流程（--upgrade 或 UPGRADE=true），跳过版本验证。");
     }
 
     console.log("\n=== 测试完成 ===");
