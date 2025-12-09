@@ -35,9 +35,8 @@ async function main(){
     let deployInfo = null;
     if (fs.existsSync(storePath)) {
         deployInfo = JSON.parse(fs.readFileSync(storePath, "utf8"));
-        console.log("\n从部署信息文件读取代理合约地址:");
+        console.log("\n从部署信息文件读取合约地址:");
         console.log("NFTAuction 实现地址:", deployInfo.auction?.implementation);
-        console.log("NFTAuction 代理地址:", deployInfo.auction?.proxyAddress);
         console.log("NFTAuctionFactory 地址:", deployInfo.auctionFactory?.address);
         console.log("价格预言机 ETH:", deployInfo.priceFeed?.eth);
         console.log("价格预言机 USDC:", deployInfo.priceFeed?.usdc);

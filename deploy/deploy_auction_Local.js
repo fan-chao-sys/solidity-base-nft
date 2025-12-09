@@ -92,46 +92,14 @@ module.exports = async function (hre) {
         console.log("Minted 1000 USDC to Bob");
 
 
-        // 定义 NFTAuction 合约的初始化参数
-        const sellerAddress = alice; // 卖家是 Alice
-        const duration = 7 * 24 * 60 * 60; // 拍卖持续时间：7天（转换为秒）
-        const startPrice = ethers.parseUnits("1", 6); // 起始价格：1 USDC（6位小数）
-        const payTokenType = usdcDeployAddress; // 支付代币类型：USDC 合约地址
-        const auctionId = 1; // 拍卖 ID：第一个拍卖
-
-        // 部署 NFTAuction 实现合约（使用 UUPS 可升级代理模式）
+        // 部署 NFTAuction 实现合约（不创建代理，所有拍卖通过 Factory 创建）
         console.log("\n--- 部署 NFTAuction 实现合约 ---");
-        // getContractFactory 的第二个参数应该是 Signer 对象，而不是地址字符串
-        // 修复：使用 deployerSigner 或者不传第二个参数（使用默认 signer）
-        // 或者使用：await ethers.getSigner(deployer)
         const NFTAuction = await ethers.getContractFactory("NFTAuction", deployerSigner);
-        // 使用 OpenZeppelin Upgrades 插件部署可升级代理合约
-        // deployProxy 会部署实现合约和代理合约
-        const auctionProxy = await upgrades.deployProxy(NFTAuction, [
-            sellerAddress,       // address _seller - 卖家地址
-            duration,            // uint256 _duration - 拍卖持续时间（秒）
-            startPrice,          // uint256 _startPrice - 起始价格
-            payTokenType,        // address _payTokenType - 支付代币合约地址
-            tokenId,             // uint256 _tokenId -  NFT Token ID
-            nftDeployAddress,    // address _nftContractAddress - NFT 合约地址
-            ethers.ZeroAddress,  // address _factoryAddress - 工厂合约地址（暂时用零地址）
-            auctionId            // uint256 _auctionId - 拍卖 ID
-        ], {
-            initializer: "initialize",  // 指定初始化函数名
-            kind: "uups"                // 指定代理类型为 UUPS（Universal Upgradeable Proxy Standard）
-        });
-        // 等待代理合约部署完成
-        await auctionProxy.waitForDeployment();
-        // 获取代理合约地址
-        const proxyAddress = await auctionProxy.getAddress();
-        // 获取实现合约地址（通过 ERC1967 标准获取）
-        const implAddress = await upgrades.erc1967.getImplementationAddress(proxyAddress);
-        console.log("拍卖代理合约地址：", proxyAddress);
-        console.log("拍卖实现合约地址：", implAddress);
-        // 保存实现合约地址，用于后续部署 Factory 合约
-        const auctionImplAddress = implAddress;
-        // 保存代理合约地址，用于后续升级
-        const auctionProxyAddress = proxyAddress;
+        // 只部署实现合约，不创建代理
+        const auctionImpl = await NFTAuction.deploy();
+        await auctionImpl.waitForDeployment();
+        const auctionImplAddress = await auctionImpl.getAddress();
+        console.log("NFTAuction 实现合约地址：", auctionImplAddress);
 
         // 部署模拟价格预言机（用于本地测试）
         console.log("\n--- 部署模拟价格预言机 ---");
@@ -148,26 +116,6 @@ module.exports = async function (hre) {
         await ethPriceFeed.waitForDeployment();
         const ethPriceFeedAddress = await ethPriceFeed.getAddress();
         console.log("ETH 价格预言机地址：", ethPriceFeedAddress);
-
-        // 为拍卖合约设置价格预言机
-        console.log("\n--- 设置价格预言机 ---");
-        const auctionContract = await ethers.getContractAt("NFTAuction", proxyAddress);
-        
-        // 设置 ETH 价格预言机（address(0) 代表 ETH）
-        const setEthPriceFeedTx = await auctionContract.connect(deployerSigner).setPriceFeed(
-            ethers.ZeroAddress,
-            ethPriceFeedAddress
-        );
-        await setEthPriceFeedTx.wait();
-        console.log("✓ ETH 价格预言机设置成功");
-        
-        // 设置 USDC 价格预言机
-        const setUsdcPriceFeedTx = await auctionContract.connect(deployerSigner).setPriceFeed(
-            usdcDeployAddress,
-            usdcPriceFeedAddress
-        );
-        await setUsdcPriceFeedTx.wait();
-        console.log("✓ USDC 价格预言机设置成功");
 
         // 部署 NFTAuctionFactory 合约（使用可升级代理模式）
         console.log("\n部署 NFTAuctionFactory 合约");
@@ -200,8 +148,7 @@ module.exports = async function (hre) {
                 bobAddress: bob,               // Bob 的地址
             },
             auction: {
-                implementation: auctionImplAddress,  // 拍卖实现合约地址
-                proxyAddress: auctionProxyAddress,    // 拍卖代理合约地址（用于升级）
+                implementation: auctionImplAddress,  // 拍卖实现合约地址（不创建代理，所有拍卖通过 Factory 创建）
             },
             auctionFactory: {
                 address: factoryAddress,       // 工厂合约地址

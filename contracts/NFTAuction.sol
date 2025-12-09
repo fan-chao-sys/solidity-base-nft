@@ -296,9 +296,15 @@ contract NFTAuction is Initializable,IERC721Receiver,OwnableUpgradeable,UUPSUpgr
     }
 
         /**
-     * @dev UUPS升级授权函数，只有合约owner可以授权升级
+     * @dev UUPS升级授权函数，允许合约owner或Factory升级
      */
     function _authorizeUpgrade(
-        address newImplementation
-    ) internal override onlyOwner {}
+        address /* newImplementation */
+    ) internal override {
+        // 允许 owner 或 Factory 升级
+        require(
+            msg.sender == owner() || msg.sender == auction.factoryAddress,
+            "Not authorized to upgrade"
+        );
+    }
 }

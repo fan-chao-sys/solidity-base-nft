@@ -92,8 +92,8 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuction.sol": {
-      "lastModificationDate": 1765159452812,
-      "contentHash": "032720cba59eca8bb601b3d00ac824c4",
+      "lastModificationDate": 1765247681478,
+      "contentHash": "c25c24f0533e4ac3213612b6e219f9fb",
       "sourceName": "contracts/NFTAuction.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -1424,7 +1424,7 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuctionV2.sol": {
-      "lastModificationDate": 1765187684469,
+      "lastModificationDate": 1765187867238,
       "contentHash": "ba17572ae9658356897fe6adba6395e9",
       "sourceName": "contracts/NFTAuctionV2.sol",
       "solcConfig": {
@@ -1470,8 +1470,8 @@
       ]
     },
     "D:\\Solidity\\project\\item-base-study\\solidity-base-nft\\contracts\\NFTAuctionFactory.sol": {
-      "lastModificationDate": 1765097902994,
-      "contentHash": "bd77b793c44d6a670c50bc9287050bc9",
+      "lastModificationDate": 1765247668847,
+      "contentHash": "8bd8abb965a721e36382803055139381",
       "sourceName": "contracts/NFTAuctionFactory.sol",
       "solcConfig": {
         "version": "0.8.28",

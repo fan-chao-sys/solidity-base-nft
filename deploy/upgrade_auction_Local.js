@@ -55,39 +55,61 @@ module.exports = async function (hre) {
     }
     console.log("✓ 工厂合约代码存在");
     
-    // 步骤1：升级现有拍卖代理到 NFTAuctionV2（UUPS 升级，不换 proxy 地址）
-    console.log("\n--- 步骤1: 升级拍卖代理到 NFTAuctionV2 (UUPS) ---");
+    // 步骤1：部署新的 V2 实现合约
+    console.log("\n--- 步骤1: 部署 NFTAuctionV2 实现合约 ---");
     const deployerSigner = await ethers.getSigner(deployer);
     const NFTAuctionV2 = await ethers.getContractFactory("NFTAuctionV2", deployerSigner);
     console.log("✓ 已加载 NFTAuctionV2 合约工厂");
+    
+    // 只部署实现合约，不创建代理
+    const v2Impl = await NFTAuctionV2.deploy();
+    await v2Impl.waitForDeployment();
+    const v2ImplAddress = await v2Impl.getAddress();
+    console.log("✓ NFTAuctionV2 实现合约已部署，地址：", v2ImplAddress);
 
-    if (!deployInfo.auction?.proxyAddress) {
-        throw new Error("部署信息中缺少 auction.proxyAddress，无法执行 upgradeProxy");
-    }
-    const auctionProxyAddress = deployInfo.auction.proxyAddress;
-    console.log("待升级的拍卖代理地址：", auctionProxyAddress);
-
-    const upgradedAuction = await upgrades.upgradeProxy(auctionProxyAddress, NFTAuctionV2, {
-        kind: "uups",
-    });
-    await upgradedAuction.waitForDeployment();
-    const newAuctionImpl = await upgrades.erc1967.getImplementationAddress(auctionProxyAddress);
-    console.log("✓ 升级完成，新实现合约地址：", newAuctionImpl);
-
-    // 步骤2：更新工厂中的实现合约地址，确保新创建的拍卖使用 V2 实现
-    console.log("\n--- 步骤2: 更新工厂中的实现合约地址 ---");
+    // 步骤2：通过 Factory 批量升级所有拍卖
+    console.log("\n--- 步骤2: 批量升级所有拍卖合约 ---");
     const factory = await ethers.getContractAt("NFTAuctionFactory", deployInfo.auctionFactory.address);
     console.log("✓ 工厂合约实例已获取");
+    
+    // 获取所有拍卖地址
+    const auctionAddresses = await factory.getAllAuctionAddresses();
+    const auctionCount = auctionAddresses.length;
+    console.log(`✓ 找到 ${auctionCount} 个拍卖合约需要升级`);
+    
+    if (auctionCount === 0) {
+        console.log("⚠️  没有找到需要升级的拍卖合约");
+    } else {
+        // 使用 Hardhat upgrades 插件批量升级所有拍卖
+        for (let i = 0; i < auctionAddresses.length; i++) {
+            const auctionAddr = auctionAddresses[i];
+            if (auctionAddr !== ethers.ZeroAddress) {
+                console.log(`  升级拍卖 ${i + 1}/${auctionCount}: ${auctionAddr}`);
+                try {
+                    await upgrades.upgradeProxy(auctionAddr, NFTAuctionV2, { kind: "uups" });
+                    console.log(`  ✓ 拍卖 ${i + 1} 升级成功`);
+                } catch (error) {
+                    console.error(`  ✗ 拍卖 ${i + 1} 升级失败:`, error.message);
+                    throw error;
+                }
+            }
+        }
+        console.log("✓ 所有拍卖合约升级完成");
+    }
 
-    const updateTx = await factory.connect(deployerSigner).setNFTAuctionImplementation(newAuctionImpl);
+    // 步骤3：更新工厂中的实现合约地址，确保新创建的拍卖使用 V2 实现
+    console.log("\n--- 步骤3: 更新工厂中的实现合约地址 ---");
+    const updateTx = await factory.connect(deployerSigner).setNFTAuctionImplementation(v2ImplAddress);
     await updateTx.wait();
     console.log("✓ 工厂实现合约地址已更新，交易哈希：", updateTx.hash);
 
     const verifyImpl = await factory.getNFTAuctionImplementation();
-    if (verifyImpl.toLowerCase() !== newAuctionImpl.toLowerCase()) {
+    if (verifyImpl.toLowerCase() !== v2ImplAddress.toLowerCase()) {
         throw new Error("工厂实现合约地址更新失败");
     }
     console.log("✓ 验证通过：工厂实现合约地址与新实现一致");
+    
+    const newAuctionImpl = v2ImplAddress;
 
     // 更新部署信息
     deployInfo.auction.implementation = newAuctionImpl;
@@ -98,11 +120,11 @@ module.exports = async function (hre) {
     console.log("✓ 部署信息已更新到:", storePath);
 
     console.log("\n=== 升级完成 ===");
-    console.log("拍卖代理地址：", auctionProxyAddress);
     console.log("新实现合约地址：", newAuctionImpl);
     console.log("工厂合约地址：", deployInfo.auctionFactory.address);
+    console.log(`已升级的拍卖数量：${auctionCount}`);
     console.log("\n注意：已存在的拍卖代理保持同一个地址，逻辑已升级到 V2；");
-    console.log("     工厂已指向 V2，实现后新创建的拍卖也将使用 V2。");
+    console.log("     工厂已指向 V2，后续新创建的拍卖也将使用 V2。");
 }
 
 // 导出标签和依赖关系

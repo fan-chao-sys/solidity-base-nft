@@ -95,6 +95,47 @@ contract NFTAuctionFactory is Initializable,OwnableUpgradeable, UUPSUpgradeable 
     }
 
     /**
+     * @dev 获取拍卖总数
+     * @return 拍卖总数
+     */
+    function getAuctionCount() external view returns (uint256) {
+        return nextAuctionId - 1;
+    }
+
+    /**
+     * @dev 获取所有拍卖地址（用于外部批量升级）
+     * @return 所有拍卖地址数组
+     */
+    function getAllAuctionAddresses() external view returns (address[] memory) {
+        uint256 count = nextAuctionId - 1;
+        address[] memory addresses = new address[](count);
+        for (uint256 i = 1; i <= count; i++) {
+            addresses[i - 1] = nftAuctionsMap[i];
+        }
+        return addresses;
+    }
+
+    /**
+     * @dev 批量升级所有拍卖合约（仅 owner 可调用）
+     * @param newImplementation 新的实现合约地址
+     */
+    function batchUpgradeAuctions(address newImplementation) external onlyOwner {
+        require(newImplementation != address(0), "Invalid implementation address");
+        
+        uint256 count = nextAuctionId - 1;
+        for (uint256 i = 1; i <= count; i++) {
+            address auctionAddress = nftAuctionsMap[i];
+            if (auctionAddress != address(0)) {
+                // 通过代理合约调用 upgradeToAndCall（UUPS 升级方法）
+                NFTAuction(payable(auctionAddress)).upgradeToAndCall(newImplementation, "");
+            }
+        }
+        
+        // 更新工厂中的实现地址
+        nftAuctionImplementation = newImplementation;
+    }
+
+    /**
      * @dev 更新实现合约地址（仅 owner 可调用）
      * @param _newImplementation 新的实现合约地址
      */

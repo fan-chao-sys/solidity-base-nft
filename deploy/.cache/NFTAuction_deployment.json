@@ -1,26 +1,25 @@
 {
   "network": "hardhat",
   "nft": {
-    "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+    "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
     "tokenId": 5,
     "aliceAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
   },
   "usdc": {
-    "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+    "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
     "bobAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
   },
   "auction": {
-    "implementation": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-    "proxyAddress": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+    "implementation": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
     "upgraded": true,
-    "upgradeTime": "2025-12-08T10:11:08.207Z"
+    "upgradeTime": "2025-12-09T02:43:45.765Z"
   },
   "auctionFactory": {
-    "address": "0x59b670e9fA9D0A427751Af201D676719a970857b"
+    "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1"
   },
   "priceFeed": {
-    "eth": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-    "usdc": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE"
+    "eth": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+    "usdc": "0x9A676e781A523b5d0C0e43731313A708CB607508"
   },
   "accounts": {
     "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
